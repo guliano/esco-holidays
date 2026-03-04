@@ -20,6 +20,7 @@ class HolidaysService
         '0815' => 'Wniebowzięcie Najświętszej Maryi Panny',
         '1101' => 'Wszystkich Świętych',
         '1111' => 'Święto Niepodległości',
+        '1224' => 'Wigilia Bożego Narodzenia',  // od 2025 roku
         '1225' => 'Boże Narodzenie',
         '1226' => 'Drugi dzień Bożego Narodzenia',
     );
@@ -51,6 +52,12 @@ class HolidaysService
         $date = clone $fromDate;
         while ($date <= $toDate) {
             if (array_key_exists($date->format('md'), self::$holidays)) {
+                if ($date->format('md') === '1224' && $date->format('Y') < '2025') {
+                    // od 2025 roku Wigilia jest dniem ustawowo wolnym od pracy
+                    $date->add(new DateInterval('P1D'));
+                    continue;
+                }
+
                 $result[$date->format('Ymd')] = self::$holidays[$date->format('md')];
             }
             if (array_key_exists($date->format('Ymd'), $movingHolidays)) {
